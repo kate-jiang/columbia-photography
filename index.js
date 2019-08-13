@@ -7,10 +7,6 @@ const path = require("path");
 // Serve static files from the React frontend app
 app.use(express.static(path.join(__dirname, "client/build")));
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "/client/build/index.html"));
-});
-
 app.get("/text", async (req, res, next) => {
   try {
     res.json({ text: "Hello" });
@@ -21,5 +17,5 @@ app.get("/text", async (req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Mixing it up on port ${PORT}`);
+  console.log(`Listening on port ${PORT}`);
 });
