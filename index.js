@@ -1,8 +1,9 @@
 const express = require("express");
 const cors = require("cors");
-const app = express();
-
 const path = require("path");
+
+const app = express();
+app.use(cors());
 
 // Serve static files from the React frontend app
 app.use(express.static(path.join(__dirname, "client/build")));
