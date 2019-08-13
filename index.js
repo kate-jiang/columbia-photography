@@ -2,9 +2,18 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
-app.get("/", async (req, res, next) => {
+const path = require("path");
+
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, "client/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname + "/client/build/index.html"));
+});
+
+app.get("/text", async (req, res, next) => {
   try {
-    res.send("Hello World");
+    res.json({ text: "Hello" });
   } catch (err) {
     next(err);
   }
