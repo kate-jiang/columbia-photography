@@ -29,17 +29,6 @@ class App extends Component {
     };
   }
 
-  componentDidMount() {
-    //this.fetchText();
-  }
-
-  fetchText = async () => {
-    const response = await fetch("/text");
-    const responseJson = await response.json();
-    console.log(responseJson);
-    this.setState({ text: responseJson.text });
-  };
-
   render() {
     return (
       <div>
