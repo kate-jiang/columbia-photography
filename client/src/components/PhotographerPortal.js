@@ -74,7 +74,7 @@ export default class PhotographerPortal extends Component {
   }
 
   componentDidMount() {
-    fetch("/getUser")
+    fetch("/api/getUser")
       .then(res => {
         if (res.status === 200) {
           return res.json();
