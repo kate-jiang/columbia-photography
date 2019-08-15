@@ -78,6 +78,21 @@ h1 {
   font-size: 16px;
 }
 
+.user ul {
+  list-style-type: none;
+  margin-block-start: 0px;
+	margin-block-end: 0px;
+	margin-inline-start: 0;
+	margin-inline-end: 0;
+	padding-inline-start: 0px;
+}
+
+.fullName {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
 .logo {
   font-family: "Futura", arial, sans-serif;
   font-size: 25px;
@@ -89,6 +104,7 @@ h1 {
 }
 
 .jobPreview {
+  display: flex;
   padding: 20px;
   border-bottom: 1px solid lightgray;
   border-left: 1px solid lightgray;
@@ -102,4 +118,27 @@ h1 {
 	margin-inline-start: 0;
 	margin-inline-end: 0;
 	padding-inline-start: 15px;
+}
+
+.jobDetails {
+  flex: 3
+}
+
+.jobOptions {
+  flex: 2;
+  text-align: right;
+}
+
+.jobOptions button {
+  border: none;
+  font-size: 16px;
+  padding: 15px;
+  color: white;
+  background-color: #5ea9cf;
+  cursor: pointer;
+  margin-left: 15px;
+}
+
+.jobOptions button:hover {
+  background-color: #558ead;
 }

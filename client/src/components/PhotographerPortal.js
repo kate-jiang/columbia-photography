@@ -107,12 +107,16 @@ export default class PhotographerPortal extends Component {
         <div className="portal">
           <div className="sidebar">
             <div className="user">
-              {this.state.firstName} {this.state.lastName}
+              <ul>
+                <li className="fullName">{this.state.firstName} {this.state.lastName}</li>
+                <li>Account Settings</li>
+                <li>Logout</li>
+              </ul>
             </div>
             <div className="logo">COLUMBIA PHOTOGRAPHY ASSOCIATION</div>
           </div>
           <div className="jobs">
-            {this.state.jobs.map(job => <JobPreview job={job} />)}
+            {this.state.jobs.map(job => <JobPreview job={job} uni={this.state.uni} />)}
           </div>
         </div>
       </div>
