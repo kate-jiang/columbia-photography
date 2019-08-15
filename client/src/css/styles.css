@@ -63,11 +63,11 @@ h1 {
   display: flex;
   width: 900px;
   height: 70vh;
-  padding: 30px;
   background-color: white;
 }
 
 .sidebar {
+  padding: 30px;
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -85,4 +85,21 @@ h1 {
 
 .jobs {
   flex: 3;
+  overflow-y: scroll;
+}
+
+.jobPreview {
+  padding: 20px;
+  border-bottom: 1px solid lightgray;
+  border-left: 1px solid lightgray;
+  line-height: 20px;
+}
+
+.jobPreview ul {
+  list-style-type: none;
+  margin-block-start: 0px;
+	margin-block-end: 0px;
+	margin-inline-start: 0;
+	margin-inline-end: 0;
+	padding-inline-start: 15px;
 }

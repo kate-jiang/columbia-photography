@@ -1,7 +1,36 @@
 import React, { Component } from "react";
+import JobPreview from "./JobPreview";
 import "../css/styles.css";
 
 const dummyJobs = [
+  {
+    name: "Graduation Portraits",
+    date: "2019-04-29",
+    time: "8am-9am",
+    location: "Campus",
+    compensation: "$102/hr"
+  },
+  {
+    name: "Wong Headshots",
+    date: "Friday, 2/1",
+    time: "12pm-5pm",
+    location: "Campus",
+    compensation: "$51"
+  },
+  {
+    name: "Junior Phi Beta Kappa Ceremony",
+    date: "January 25th",
+    time: "3-5pm",
+    location: "Low Library Faculty Room",
+    compensation: "$204"
+  },
+  {
+    name: "CC Winter Festival",
+    date: "December 5th",
+    time: "5:30-7pm",
+    location: "Campus",
+    compensation: "$128"
+  },
   {
     name: "Graduation Portraits",
     date: "2019-04-29",
@@ -83,19 +112,7 @@ export default class PhotographerPortal extends Component {
             <div className="logo">COLUMBIA PHOTOGRAPHY ASSOCIATION</div>
           </div>
           <div className="jobs">
-            {this.state.jobs.map(job => {
-              return (
-                <div>
-                  <ul>
-                    <li>{job.name}</li>
-                    <li>{job.date}</li>
-                    <li>{job.time}</li>
-                    <li>{job.location}</li>
-                    <li>{job.compensation}</li>
-                  </ul>
-                </div>
-              );
-            })}
+            {this.state.jobs.map(job => <JobPreview job={job} />)}
           </div>
         </div>
       </div>
