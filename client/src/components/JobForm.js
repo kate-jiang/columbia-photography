@@ -126,6 +126,8 @@ export default class JobForm extends Component {
               onChange={this.handleInputChange}
               required
             />
+            <div className="break"></div>
+            <input type="submit" value="Submit" className="hireButton" />
           </form>
         </div>
       </div>
