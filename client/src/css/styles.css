@@ -92,8 +92,19 @@ h1 {
 
 .hireInputLabel {
   flex: 1;
-  margin-top: 10px;
+  margin-top: 5px;
   margin-left: 10px;
+}
+
+.hireButton {
+  margin: 10px;
+  flex: 1;
+  border: none;
+  font-size: 20px;
+  padding: 15px;
+  color: white;
+  background-color: #5ea9cf;
+  cursor: pointer;
 }
 
 .break {
