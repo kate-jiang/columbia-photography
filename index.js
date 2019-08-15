@@ -35,9 +35,26 @@ app.get("/checkToken", withAuth, (req, res) => {
   res.sendStatus(200);
 });
 
+app.get("/getUser", withAuth, (req, res) => {
+  User.findOne({ uni: req.uni }, (err, user) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        error: "Internal error please try again"
+      });
+    } else {
+      res.status(200).json({
+        uni: req.uni,
+        firstName: user.firstName,
+        lastName: user.lastName
+      });
+    }
+  });
+});
+
 app.post("/register", (req, res) => {
-  const { uni, password } = req.body;
-  const user = new User({ uni, password });
+  const { uni, firstName, lastName, password } = req.body;
+  const user = new User({ uni, firstName, lastName, password });
   user.save(err => {
     if (err) {
       res.status(500).send("Error registering new user.");

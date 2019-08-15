@@ -1,25 +1,8 @@
 import React, { Component } from "react";
-import { Link, Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import Login from "./Login";
+import PhotographerPortal from "./PhotographerPortal";
 import withAuth from "./withAuth";
-
-class Home extends Component {
-  constructor() {
-    super();
-    this.state = {
-      message: "Success"
-    };
-  }
-
-  render() {
-    return (
-      <div>
-        <h1>Home</h1>
-        <p>{this.state.message}</p>
-      </div>
-    );
-  }
-}
 
 class App extends Component {
   constructor(props) {
@@ -33,7 +16,7 @@ class App extends Component {
     return (
       <div>
         <Switch>
-          <Route path="/" exact component={withAuth(Home)} />
+          <Route path="/" exact component={withAuth(PhotographerPortal)} />
           <Route path="/login" component={Login} />
         </Switch>
       </div>
