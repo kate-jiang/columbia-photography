@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
 import Login from "./Login";
 import PhotographerPortal from "./PhotographerPortal";
+import JobForm from "./JobForm";
 import withAuth from "./withAuth";
 
 class App extends Component {
@@ -17,6 +18,7 @@ class App extends Component {
       <div>
         <Switch>
           <Route path="/" exact component={withAuth(PhotographerPortal)} />
+          <Route path="/hire" component={JobForm} />
           <Route path="/login" component={Login} />
         </Switch>
       </div>

@@ -19,7 +19,7 @@ export default class Login extends Component {
 
   onSubmit = event => {
     event.preventDefault();
-    fetch("/authenticate", {
+    fetch("/api/authenticate", {
       method: "POST",
       body: JSON.stringify(this.state),
       headers: {
@@ -48,7 +48,7 @@ export default class Login extends Component {
             <h1>COLUMBIA PHOTOGRAPHY ASSOCIATION</h1>
             <div className="auth-content-wrap">
               <input
-                type="uni"
+                type="text"
                 name="uni"
                 placeholder="UNI"
                 className="auth-input"

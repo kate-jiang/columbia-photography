@@ -6,7 +6,8 @@ const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 
-const User = require("./models/User.js");
+const User = require("./models/User");
+const Job = require("./models/Job");
 const withAuth = require("./middleware");
 
 const secret = process.env.secret;
@@ -31,11 +32,11 @@ mongoose.connect(mongo_uri, { useNewUrlParser: true }, err => {
   }
 });
 
-app.get("/checkToken", withAuth, (req, res) => {
+app.get("/api/checkToken", withAuth, (req, res) => {
   res.sendStatus(200);
 });
 
-app.get("/getUser", withAuth, (req, res) => {
+app.get("/api/getUser", withAuth, (req, res) => {
   User.findOne({ uni: req.uni }, (err, user) => {
     if (err) {
       console.error(err);
@@ -52,7 +53,7 @@ app.get("/getUser", withAuth, (req, res) => {
   });
 });
 
-app.post("/register", (req, res) => {
+app.post("/api/register", (req, res) => {
   const { uni, firstName, lastName, password } = req.body;
   const user = new User({ uni, firstName, lastName, password });
   user.save(err => {
@@ -64,7 +65,7 @@ app.post("/register", (req, res) => {
   });
 });
 
-app.post("/authenticate", (req, res) => {
+app.post("/api/authenticate", (req, res) => {
   const { uni, password } = req.body;
   User.findOne({ uni }, (err, user) => {
     if (err) {
@@ -98,6 +99,14 @@ app.post("/authenticate", (req, res) => {
     }
   });
 });
+
+app.post("/api/createJob", (req, res) => {
+  
+})
+
+app.post("/api/applyToJob", (req, res) => {
+
+})
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
