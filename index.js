@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
+const moment = require("moment");
 
 const User = require("./models/User");
 const Job = require("./models/Job");
@@ -131,6 +132,8 @@ app.post("/api/createJob", (req, res) => {
     date,
     startTime,
     endTime,
+    time: moment(startTime, 'HH:mm').format('h:mm a') + ' - '
+        + moment(endTime, 'HH:mm').format('h:mm a'),
     location,
     details,
     approved: false,
@@ -145,6 +148,19 @@ app.post("/api/createJob", (req, res) => {
       res.status(200).send("Successfully created job.");
     }
   });
+});
+
+app.get("/api/jobs", withAuth, (req, res) => {
+  Job.find((err, jobs) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        error: "Internal error please try again"
+      });
+    } else {
+      res.status(200).send(jobs);
+    }
+  })
 })
 
 app.post("/api/applyToJob", (req, res) => {
