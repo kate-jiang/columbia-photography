@@ -7,14 +7,38 @@ export default class JobForm extends Component {
     this.state = {
       firstName: "",
       lastName: "",
-      email: "",
-      phone: "",
+      clientEmail: "",
+      clientPhone: "",
       jobName: "",
       date: "",
       startTime: "",
       endTime: "",
-      details: "",
+      location: "",
+      details: ""
     }
+  }
+
+  handleSubmit = event => {
+    event.preventDefault();
+    fetch("/api/createJob",  {
+      method: "POST",
+      body: JSON.stringify(this.state),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then(res => {
+      if (res.status === 200) {
+        this.props.history.push("/");
+      } else {
+        const error = new Error(res.error);
+        throw error;
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Error creating job request. Please email columbia-photography@columbia.edu for assistance.");
+    });
   }
 
   handleInputChange = event => {
@@ -22,6 +46,7 @@ export default class JobForm extends Component {
     this.setState({
       [name]: value
     });
+    console.log(value);
   };
 
   render() {
@@ -30,7 +55,7 @@ export default class JobForm extends Component {
         <div className="hire">
           <div className="hireTitle">HIRE CPA</div>
           <div className="break"></div>
-          <form className="hireForm">
+          <form className="hireForm" onSubmit={this.handleSubmit}>
             <input
               type="text"
               name="firstName"
@@ -52,19 +77,19 @@ export default class JobForm extends Component {
             <div className="break"></div>
             <input
               type="email"
-              name="email"
+              name="clientEmail"
               placeholder="Email"
               className="hireInput"
-              value={this.state.email}
+              value={this.state.clientEmail}
               onChange={this.handleInputChange}
               required
             />
             <input
               type="tel"
-              name="phone"
+              name="clientPhone"
               placeholder="Phone Number"
               className="hireInput"
-              value={this.state.phone}
+              value={this.state.clientPhone}
               onChange={this.handleInputChange}
               required
             />
@@ -116,6 +141,16 @@ export default class JobForm extends Component {
                 required
               />
             </div>
+            <div className="break"></div>
+            <input
+              type="text"
+              name="location"
+              placeholder="Location"
+              className="hireInput"
+              value={this.state.location}
+              onChange={this.handleInputChange}
+              required
+            />
             <div className="break"></div>
             <input
               type="text"

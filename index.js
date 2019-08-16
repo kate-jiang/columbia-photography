@@ -24,7 +24,7 @@ app.use(express.static(path.join(__dirname, "client/build")));
 
 const mongo_uri = process.env.MONGODB_URI;
 
-mongoose.connect(mongo_uri, { useNewUrlParser: true }, err => {
+mongoose.connect(mongo_uri, { useCreateIndex: true, useNewUrlParser: true }, err => {
   if (err) {
     throw err;
   } else {
@@ -100,8 +100,51 @@ app.post("/api/authenticate", (req, res) => {
   });
 });
 
+function calculatePayment(start, end, hourlyRate) {
+    start = start.split(":");
+    end = end.split(":");
+    let startDate = new Date(0, 0, 0, start[0], start[1], 0);
+    let endDate = new Date(0, 0, 0, end[0], end[1], 0);
+    let diff = endDate.getTime() - startDate.getTime();
+    let hours = Math.floor(diff / 1000 / 60 / 60);
+    diff -= hours * 1000 * 60 * 60;
+    let minutes = Math.floor(diff / 1000 / 60);
+
+    return hours * hourlyRate + minutes / 60 * hourlyRate;
+}
+
+
 app.post("/api/createJob", (req, res) => {
-  
+  const { firstName, lastName, clientEmail,
+          clientPhone, jobName, date, startTime,
+          endTime, location, details } = req.body;
+  const hourlyRate = 120;
+  const totalAmount = calculatePayment(startTime, endTime, hourlyRate);
+  const photographerCut = .85;
+
+  const job = new Job({
+    jobName,
+    jobType: "event",
+    clientName: `${firstName} ${lastName}`,
+    clientEmail,
+    clientPhone,
+    date,
+    startTime,
+    endTime,
+    location,
+    details,
+    approved: false,
+    totalAmount,
+    compensation: totalAmount * photographerCut
+  });
+
+  job.save(err => {
+    if (err) {
+      res.status(500).send("Error creating job.");
+    } else {
+      res.status(200).send("Successfully created job.");
+    }
+  });
 })
 
 app.post("/api/applyToJob", (req, res) => {

@@ -21,32 +21,28 @@ const JobSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  flexibleTime: {
-    type: Boolean,
-    required: true
-  },
   date: {
     type: String,
-    required: false
+    required: true
   },
-  time: {
+  startTime: {
     type: String,
-    required: false
+    required: true,
   },
-  flexibleTimeDetails: {
+  endTime: {
     type: String,
-    required: false
+    required: true
   },
   location: {
     type: String,
     required: true
   },
   totalAmount: {
-    type: mongoose.Types.Decimal128,
+    type: Number,
     required: true
   },
   compensation: {
-    type: mongoose.Types.Decimal128,
+    type: Number,
     required: true
   },
   approved: {
