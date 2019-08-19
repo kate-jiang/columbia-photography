@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { NavLink, Route } from "react-router-dom";
 import Jobs from "./Jobs"
+import JobPosting from "./JobPosting";
 import AccountSettings from "./AccountSettings"
 import "../css/styles.css";
 
@@ -60,9 +61,11 @@ export default class PhotographerPortal extends Component {
             </div>
             <div className="logo">COLUMBIA PHOTOGRAPHY ASSOCIATION</div>
           </div>
-
             <Route exact path="/"
                 render={(props) => <Jobs {...props} uni={this.state.uni} />}
+            />
+            <Route path="/jobs/:jobId"
+                render={(props) => <JobPosting {...props} uni={this.state.uni}/>}
             />
             <Route path="/settings"
                 render={(props) => <AccountSettings {...props} uni={this.state.uni} />}

@@ -137,6 +137,7 @@ h1 {
 
 .accountSettings {
   display: flex;
+  flex: 3;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
@@ -175,7 +176,7 @@ a:hover {
 .portal {
   display: flex;
   width: 900px;
-  height: 70vh;
+  min-height: 70vh;
   background-color: white;
 }
 
@@ -224,7 +225,7 @@ a:hover {
   line-height: 20px;
 }
 
-.jobPreview ul {
+.jobPreview ul, .jobPosting ul {
   list-style-type: none;
   margin-block-start: 0px;
 	margin-block-end: 0px;
@@ -254,4 +255,21 @@ a:hover {
 
 .jobOptions button:hover {
   background-color: #558ead;
+}
+
+.jobPosting {
+  flex: 3;
+  padding: 20px;
+}
+
+.jobPosting li {
+  line-height: 20px;
+}
+
+.jobPosting h2 {
+  font-weight: normal;
+  margin: 0px;
+  color: black;
+  line-height: 50px;
+  font-size: 35px;
 }

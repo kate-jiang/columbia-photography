@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
 export default class JobPreview extends Component {
   constructor(props) {
@@ -50,7 +51,7 @@ export default class JobPreview extends Component {
           <button onClick={this.apply} disabled={this.state.applied}>
             {this.state.applied ? 'Applied' : 'Apply'}
           </button>
-          <button>More Info</button>
+          <Link to={`/jobs/${this.props.job._id}`}><button>More Info</button></Link>
         </div>
       </div>
     )

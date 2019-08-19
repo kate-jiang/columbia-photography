@@ -25,7 +25,6 @@ export default class AccountSettings extends Component {
       })
       .then(resJson => {
         this.originalValues = resJson;
-        console.log(this.originalValues);
         this.setState({
           firstName: resJson.firstName,
           lastName: resJson.lastName,
