@@ -9,7 +9,6 @@ export default class JobPreview extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props.job.photographers);
     if (this.props.job.photographers.indexOf(this.props.uni) > -1) {
       this.setState({ applied: true });
     }

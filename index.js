@@ -48,7 +48,10 @@ app.get("/api/getUser", withAuth, (req, res) => {
       res.status(200).json({
         uni: req.uni,
         firstName: user.firstName,
-        lastName: user.lastName
+        lastName: user.lastName,
+        defaultPortfolio: user.defaultPortfolio,
+        eventPortfolio: user.eventPortfolio,
+        portraitPortfolio: user.portraitPortfolio
       });
     }
   });
@@ -181,6 +184,33 @@ app.post("/api/applyToJob", withAuth, (req, res) => {
           res.status(500).send("Error applying to job.");
         } else {
           res.status(200).send("Successfully applied to job.");
+        }
+      });
+    }
+  })
+})
+
+app.post("/api/updateUser", withAuth, (req, res) => {
+  const { firstName, lastName, defaultPortfolio, portraitPortfolio, eventPortfolio } = req.body;
+  User.findOne({ uni: req.uni }, (err, user) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        error: "Internal error please try again"
+      });
+    } else {
+      user.firstName = firstName;
+      user.lastName = lastName;
+      user.defaultPortfolio = defaultPortfolio;
+      user.portraitPortfolio = portraitPortfolio;
+      user.eventPortfolio = eventPortfolio;
+
+      user.save(err => {
+        if (err) {
+          console.log(err)
+          res.status(500).send("Error saving settings.");
+        } else {
+          res.status(200).send("Successfully saved settings.");
         }
       });
     }

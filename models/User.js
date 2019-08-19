@@ -20,6 +20,18 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true
+  },
+  defaultPortfolio: {
+    type: String,
+    required: false
+  },
+  eventPortfolio: {
+    type: String,
+    required: false
+  },
+  portraitPortfolio: {
+    type: String,
+    required: false
   }
 });
 

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, Route, BrowserRouter } from "react-router-dom";
+import { NavLink, Route } from "react-router-dom";
 import Jobs from "./Jobs"
 import AccountSettings from "./AccountSettings"
 import "../css/styles.css";
@@ -40,28 +40,33 @@ export default class PhotographerPortal extends Component {
       });
   }
 
+  logout() {
+    // todo
+  }
+
   render() {
     return (
+
       <div className="container">
         <div className="portal">
           <div className="sidebar">
             <div className="user">
               <ul>
                 <li className="fullName">{this.state.firstName} {this.state.lastName}</li>
-                <li>Account Settings</li>
-                <li>Logout</li>
+                <li><NavLink activeClassName="selected" exact to="/">Dashboard</NavLink></li>
+                <li><NavLink activeClassName="selected" to="/settings">Account Settings</NavLink></li>
+                <li><NavLink to="/login" onClick={this.logout}>Logout</NavLink></li>
               </ul>
             </div>
             <div className="logo">COLUMBIA PHOTOGRAPHY ASSOCIATION</div>
           </div>
-          <BrowserRouter>
+
             <Route exact path="/"
                 render={(props) => <Jobs {...props} uni={this.state.uni} />}
             />
             <Route path="/settings"
                 render={(props) => <AccountSettings {...props} uni={this.state.uni} />}
             />
-          </BrowserRouter>
         </div>
       </div>
     );

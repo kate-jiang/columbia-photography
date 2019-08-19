@@ -162,7 +162,7 @@ export default class JobForm extends Component {
               required
             />
             <div className="break"></div>
-            <input type="submit" value="Submit" className="hireButton" />
+            <input type="submit" value="Submit" className="submitButton" />
           </form>
         </div>
       </div>
