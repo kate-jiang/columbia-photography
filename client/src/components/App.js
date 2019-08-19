@@ -3,7 +3,7 @@ import { Route, Switch, BrowserRouter } from "react-router-dom";
 import Login from "./Login";
 import PhotographerPortal from "./PhotographerPortal";
 import HireForm from "./HireForm";
-import withAuth from "./withAuth";
+import { withAuth } from "./Auth";
 
 class App extends Component {
 

@@ -9,7 +9,7 @@ const moment = require("moment");
 
 const User = require("./models/User");
 const Job = require("./models/Job");
-const withAuth = require("./middleware");
+const { withAuth, withAdminAuth } = require("./middleware");
 
 const secret = process.env.secret;
 
@@ -37,6 +37,10 @@ app.get("/api/checkToken", withAuth, (req, res) => {
   res.sendStatus(200);
 });
 
+app.get("/api/checkAdminToken", withAdminAuth, (req, res) => {
+  res.sendStatus(200);
+});
+
 app.get("/api/getUser", withAuth, (req, res) => {
   User.findOne({ uni: req.uni }, (err, user) => {
     if (err) {
@@ -58,8 +62,8 @@ app.get("/api/getUser", withAuth, (req, res) => {
 });
 
 app.post("/api/register", (req, res) => {
-  const { uni, firstName, lastName, password } = req.body;
-  const user = new User({ uni, firstName, lastName, password });
+  const { uni, firstName, lastName, admin, password } = req.body;
+  const user = new User({ uni, firstName, lastName, admin, password });
   user.save(err => {
     if (err) {
       res.status(500).send("Error registering new user.");
@@ -93,7 +97,7 @@ app.post("/api/authenticate", (req, res) => {
           });
         } else {
           // Issue token
-          const payload = { uni };
+          const payload = { uni, admin: user.admin };
           const token = jwt.sign(payload, secret, {
             expiresIn: "1h"
           });
@@ -224,7 +228,7 @@ app.post("/api/withdrawFromjob", withAuth, (req, res) => {
   })
 })
 
-app.post("/api/updateJob", withAuth, (req, res) => {
+app.post("/api/updateJob", withAdminAuth, (req, res) => {
   Job.findById(req.body.jobId, (err, job) => {
     if (err) {
       console.log(err);
@@ -249,7 +253,7 @@ app.post("/api/updateJob", withAuth, (req, res) => {
   })
 })
 
-app.post("/api/approveJob", withAuth, (req, res) => {
+app.post("/api/approveJob", withAdminAuth, (req, res) => {
   Job.findById(req.body.jobId, (err, job) => {
     if (err) {
       console.log(err);
@@ -269,7 +273,7 @@ app.post("/api/approveJob", withAuth, (req, res) => {
   })
 })
 
-app.post("/api/unapproveJob", withAuth, (req, res) => {
+app.post("/api/unapproveJob", withAdminAuth, (req, res) => {
   Job.findById(req.body.jobId, (err, job) => {
     if (err) {
       console.log(err);

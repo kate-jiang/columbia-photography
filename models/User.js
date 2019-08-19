@@ -21,6 +21,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  admin: {
+    type: Boolean,
+    required: true
+  },
   defaultPortfolio: {
     type: String,
     required: false
