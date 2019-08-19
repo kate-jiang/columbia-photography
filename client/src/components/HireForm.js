@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 
-export default class JobForm extends Component {
+export default class HireForm extends Component {
   constructor(props) {
     super(props);
     this.state = {

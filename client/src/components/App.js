@@ -2,17 +2,17 @@ import React, { Component } from "react";
 import { Route, Switch, BrowserRouter } from "react-router-dom";
 import Login from "./Login";
 import PhotographerPortal from "./PhotographerPortal";
-import JobForm from "./JobForm";
+import HireForm from "./HireForm";
 import withAuth from "./withAuth";
 
 class App extends Component {
-  
+
   render() {
     return (
       <div>
         <BrowserRouter>
           <Switch>
-            <Route path="/hire" component={JobForm} />
+            <Route path="/hire" component={HireForm} />
             <Route path="/login" component={Login} />
             <Route path="/" component={withAuth(PhotographerPortal)} />
           </Switch>
