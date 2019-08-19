@@ -52,6 +52,10 @@ const JobSchema = new mongoose.Schema({
   approved: {
     type: Boolean,
     required: true
+  },
+  photographers: {
+    type: [String],
+    required: true
   }
 })
 

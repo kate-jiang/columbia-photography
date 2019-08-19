@@ -138,7 +138,8 @@ app.post("/api/createJob", (req, res) => {
     details,
     approved: false,
     totalAmount,
-    compensation: totalAmount * photographerCut
+    compensation: totalAmount * photographerCut,
+    photographers: []
   });
 
   job.save(err => {
@@ -163,8 +164,27 @@ app.get("/api/jobs", withAuth, (req, res) => {
   })
 })
 
-app.post("/api/applyToJob", (req, res) => {
-
+app.post("/api/applyToJob", withAuth, (req, res) => {
+  Job.findById(req.body.jobId, (err, job) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({
+        error: "Internal error please try again"
+      });
+    } else {
+      if (!job.photographers.includes(req.uni)) {
+        job.photographers = job.photographers.concat([req.uni]);
+      }
+      job.save(err => {
+        if (err) {
+          console.log(err)
+          res.status(500).send("Error applying to job.");
+        } else {
+          res.status(200).send("Successfully applied to job.");
+        }
+      });
+    }
+  })
 })
 
 const PORT = process.env.PORT || 5000;
