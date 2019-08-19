@@ -1,5 +1,7 @@
 import React, { Component } from "react";
-import JobPreview from "./JobPreview";
+import { Link, Route, BrowserRouter } from "react-router-dom";
+import Jobs from "./Jobs"
+import AccountSettings from "./AccountSettings"
 import "../css/styles.css";
 
 export default class PhotographerPortal extends Component {
@@ -36,21 +38,6 @@ export default class PhotographerPortal extends Component {
         console.error(err);
         this.setState({ loading: false, redirect: true });
       });
-
-    fetch("/api/jobs")
-      .then(res => {
-        if (res.status === 200) {
-          return res.json();
-        } else {
-          const error = new Error(res.error);
-          throw error;
-        }
-      })
-      .then(resJson => {
-        this.setState({
-          jobs: resJson
-        })
-      })
   }
 
   render() {
@@ -67,9 +54,14 @@ export default class PhotographerPortal extends Component {
             </div>
             <div className="logo">COLUMBIA PHOTOGRAPHY ASSOCIATION</div>
           </div>
-          <div className="jobs">
-            {this.state.jobs.map(job => <JobPreview job={job} uni={this.state.uni} key={job._id} />)}
-          </div>
+          <BrowserRouter>
+            <Route exact path="/"
+                render={(props) => <Jobs {...props} uni={this.state.uni} />}
+            />
+            <Route path="/settings"
+                render={(props) => <AccountSettings {...props} uni={this.state.uni} />}
+            />
+          </BrowserRouter>
         </div>
       </div>
     );
