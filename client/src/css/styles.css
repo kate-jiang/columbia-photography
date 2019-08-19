@@ -176,7 +176,7 @@ a:hover {
 .portal {
   display: flex;
   width: 900px;
-  min-height: 70vh;
+  min-height: 75vh;
   background-color: white;
 }
 
@@ -225,7 +225,7 @@ a:hover {
   line-height: 20px;
 }
 
-.jobPreview ul, .jobPosting ul {
+.jobPreview ul, .jobPosting ul, .clientInfo ul {
   list-style-type: none;
   margin-block-start: 0px;
 	margin-block-end: 0px;
@@ -239,7 +239,7 @@ a:hover {
 }
 
 .jobOptions {
-  flex: 2;
+  flex: 3;
   text-align: right;
 }
 
@@ -272,4 +272,9 @@ a:hover {
   color: black;
   line-height: 50px;
   font-size: 35px;
+}
+
+.clientInfo h2 {
+  margin-bottom: 10px;
+  font-size: 20px;
 }

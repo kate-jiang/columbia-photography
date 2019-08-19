@@ -156,7 +156,7 @@ app.post("/api/createJob", (req, res) => {
 });
 
 app.get("/api/jobs", withAuth, (req, res) => {
-  Job.find((err, jobs) => {
+  Job.find({ approved: true }, (err, jobs) => {
     if (err) {
       console.error(err);
       res.status(500).json({
@@ -194,7 +194,6 @@ app.post("/api/applyToJob", withAuth, (req, res) => {
       }
       job.save(err => {
         if (err) {
-          console.log(err)
           res.status(500).send("Error applying to job.");
         } else {
           res.status(200).send("Successfully applied to job.");
@@ -219,6 +218,71 @@ app.post("/api/withdrawFromjob", withAuth, (req, res) => {
           res.status(500).send("Error withdrawing from job.");
         } else {
           res.status(200).send("Successfully withdrew from job.");
+        }
+      });
+    }
+  })
+})
+
+app.post("/api/updateJob", withAuth, (req, res) => {
+  Job.findById(req.body.jobId, (err, job) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({
+        error: "Internal error please try again"
+      });
+    } else {
+      job.jobName = req.body.jobName,
+      job.date = req.body.date,
+      job.time = req.body.time,
+      job.location = req.body.location,
+      job.details = req.body.details,
+      job.compensation = req.body.compensation
+      job.save(err => {
+        if (err) {
+          res.status(500).send("Error approving job.");
+        } else {
+          res.status(200).send("Successfully approve job.");
+        }
+      });
+    }
+  })
+})
+
+app.post("/api/approveJob", withAuth, (req, res) => {
+  Job.findById(req.body.jobId, (err, job) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({
+        error: "Internal error please try again"
+      });
+    } else {
+      job.approved = true;
+      job.save(err => {
+        if (err) {
+          res.status(500).send("Error approving job.");
+        } else {
+          res.status(200).send("Successfully approve job.");
+        }
+      });
+    }
+  })
+})
+
+app.post("/api/unapproveJob", withAuth, (req, res) => {
+  Job.findById(req.body.jobId, (err, job) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({
+        error: "Internal error please try again"
+      });
+    } else {
+      job.approved = false;
+      job.save(err => {
+        if (err) {
+          res.status(500).send("Error unapproving job.");
+        } else {
+          res.status(200).send("Successfully unapproved job.");
         }
       });
     }
