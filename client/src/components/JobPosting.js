@@ -36,12 +36,16 @@ export default class JobPosting extends Component {
           applied: resJson.photographers.includes(this.props.uni)
         })
       })
+      .catch(err => {
+        console.log(err);
+        alert(err);
+      });
   }
 
   apply = () => {
     fetch("/api/applyToJob", {
       method: "POST",
-      body: JSON.stringify({ jobId: this.props.job._id }),
+      body: JSON.stringify({ jobId: this.props.match.params.jobId }),
       headers: {
         "Content-Type": "application/json"
       }
@@ -49,6 +53,28 @@ export default class JobPosting extends Component {
       .then(res => {
         if (res.status === 200) {
           this.setState({ applied: true })
+        } else {
+          const error = new Error(res.error);
+          throw error;
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        alert(err);
+      });
+  }
+
+  withdraw = () => {
+    fetch("/api/withdrawFromjob", {
+      method: "POST",
+      body: JSON.stringify({ jobId: this.props.match.params.jobId }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => {
+        if (res.status === 200) {
+          this.setState({ applied: false })
         } else {
           const error = new Error(res.error);
           throw error;
@@ -72,9 +98,11 @@ export default class JobPosting extends Component {
           <li><strong>Details:</strong> {this.state.details}</li>
         </ul>
         <div className="jobOptions">
-          <button onClick={this.apply} disabled={this.state.applied}>
-            {this.state.applied ? 'Applied' : 'Apply'}
-          </button>
+          {this.state.applied ? (
+            <button onClick={this.withdraw}>Withdraw</button>
+          ) : (
+            <button onClick={this.apply}>Apply</button>
+          )}
           <Link to="/"><button>Back</button></Link>
         </div>
       </div>

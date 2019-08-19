@@ -105,6 +105,7 @@ app.post("/api/authenticate", (req, res) => {
 });
 
 function calculatePayment(start, end, hourlyRate) {
+    // TODO: deal with overlapping past midnight
     start = start.split(":");
     end = end.split(":");
     let startDate = new Date(0, 0, 0, start[0], start[1], 0);
@@ -167,7 +168,7 @@ app.get("/api/jobs", withAuth, (req, res) => {
   })
 })
 
-app.get("/api/jobs/:jobId", (req, res) => {
+app.get("/api/jobs/:jobId", withAuth, (req, res) => {
   Job.findById(req.params.jobId, (err, job) => {
     if (err) {
       console.log(err);
@@ -197,6 +198,27 @@ app.post("/api/applyToJob", withAuth, (req, res) => {
           res.status(500).send("Error applying to job.");
         } else {
           res.status(200).send("Successfully applied to job.");
+        }
+      });
+    }
+  })
+})
+
+app.post("/api/withdrawFromjob", withAuth, (req, res) => {
+  Job.findById(req.body.jobId, (err, job) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({
+        error: "Internal error please try again"
+      });
+    } else {
+      job.photographers = job.photographers.filter(uni => uni !== req.uni)
+      job.save(err => {
+        if (err) {
+          console.log(err)
+          res.status(500).send("Error withdrawing from job.");
+        } else {
+          res.status(200).send("Successfully withdrew from job.");
         }
       });
     }
