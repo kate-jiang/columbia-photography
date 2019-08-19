@@ -96,7 +96,7 @@ h1 {
   margin-left: 10px;
 }
 
-.hireButton {
+.submitButton {
   margin: 10px;
   flex: 1;
   border: none;
@@ -104,6 +104,17 @@ h1 {
   padding: 15px;
   color: white;
   background-color: #5ea9cf;
+  cursor: pointer;
+}
+
+.undoButton {
+  margin: 10px;
+  flex: 1;
+  border: none;
+  font-size: 20px;
+  padding: 15px;
+  color: white;
+  background-color: gray;
   cursor: pointer;
 }
 
@@ -122,6 +133,43 @@ h1 {
   padding: 15px;
   height: 25px;
   border: 1px solid #dadce0;
+}
+
+.accountSettings {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+
+.settingsTitle {
+  width: 100%;
+  font-family: "Futura", arial, sans-serif;
+  font-size: 35px;
+  letter-spacing: 5px;
+  text-align: center;
+}
+
+.settingsForm {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+a {
+  color: gray;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.selected {
+  font-weight: bold;
+  color: black;
+  text-decoration: none;
 }
 
 .portal {
