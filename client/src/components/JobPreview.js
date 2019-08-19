@@ -37,6 +37,28 @@ export default class JobPreview extends Component {
       });
   }
 
+  withdraw = () => {
+    fetch("/api/withdrawFromjob", {
+      method: "POST",
+      body: JSON.stringify({ jobId: this.props.job._id }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => {
+        if (res.status === 200) {
+          this.setState({ applied: false })
+        } else {
+          const error = new Error(res.error);
+          throw error;
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        alert(err);
+      });
+  }
+
   render() {
     return (
       <div className="jobPreview">
@@ -48,9 +70,11 @@ export default class JobPreview extends Component {
           <li><strong>Compensation:</strong> ${this.props.job.compensation}</li>
         </ul>
         <div className="jobOptions">
-          <button onClick={this.apply} disabled={this.state.applied}>
-            {this.state.applied ? 'Applied' : 'Apply'}
-          </button>
+          {this.state.applied ? (
+            <button onClick={this.withdraw}>Withdraw</button>
+          ) : (
+            <button onClick={this.apply}>Apply</button>
+          )}
           <Link to={`/jobs/${this.props.job._id}`}><button>More Info</button></Link>
         </div>
       </div>
