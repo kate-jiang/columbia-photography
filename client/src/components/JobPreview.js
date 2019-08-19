@@ -5,7 +5,8 @@ export default class JobPreview extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      applied: false
+      applied: false,
+      admin: false
     }
   }
 
@@ -13,6 +14,19 @@ export default class JobPreview extends Component {
     if (this.props.job.photographers.indexOf(this.props.uni) > -1) {
       this.setState({ applied: true });
     }
+
+    fetch("/api/checkAdminToken")
+      .then(res => {
+        if (res.status === 200) {
+          this.setState({ admin: true });
+        } else {
+          this.setState({ admin: false });
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        this.setState({ loading: false, redirect: true });
+      });
   }
 
   apply = () => {
@@ -75,7 +89,9 @@ export default class JobPreview extends Component {
           ) : (
             <button onClick={this.apply}>Apply</button>
           )}
-          <Link to={`/jobs/${this.props.job._id}/edit`}><button>Edit</button></Link>
+          {this.state.admin &&
+            <Link to={`/jobs/${this.props.job._id}/edit`}><button>Edit</button></Link>
+          }
           <Link to={`/jobs/${this.props.job._id}`}><button>More Info</button></Link>
         </div>
       </div>

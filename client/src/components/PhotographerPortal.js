@@ -4,6 +4,7 @@ import Jobs from "./Jobs"
 import JobPosting from "./JobPosting";
 import JobSettings from "./JobSettings";
 import AccountSettings from "./AccountSettings"
+import { withAdminAuth } from "./Auth";
 import "../css/styles.css";
 
 export default class PhotographerPortal extends Component {
@@ -69,7 +70,7 @@ export default class PhotographerPortal extends Component {
                 render={(props) => <JobPosting {...props} uni={this.state.uni}/>}
             />
             <Route exact path="/jobs/:jobId/edit"
-                render={(props) => <JobSettings {...props} uni={this.state.uni}/>}
+                component={withAdminAuth(JobSettings)}
             />
             <Route path="/settings"
                 render={(props) => <AccountSettings {...props} uni={this.state.uni} />}
