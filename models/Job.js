@@ -49,6 +49,10 @@ const JobSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  details: {
+    type: String,
+    required: true
+  },
   approved: {
     type: Boolean,
     required: true

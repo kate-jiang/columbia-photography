@@ -167,6 +167,19 @@ app.get("/api/jobs", withAuth, (req, res) => {
   })
 })
 
+app.get("/api/jobs/:jobId", (req, res) => {
+  Job.findById(req.params.jobId, (err, job) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({
+        error: "Internal error please try again"
+      });
+    } else {
+      res.status(200).send(job);
+    }
+  })
+})
+
 app.post("/api/applyToJob", withAuth, (req, res) => {
   Job.findById(req.body.jobId, (err, job) => {
     if (err) {

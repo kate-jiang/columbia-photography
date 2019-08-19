@@ -6,13 +6,7 @@ import JobForm from "./JobForm";
 import withAuth from "./withAuth";
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      text: ""
-    };
-  }
-
+  
   render() {
     return (
       <div>
@@ -20,17 +14,15 @@ class App extends Component {
           <Switch>
             <Route path="/hire" component={JobForm} />
             <Route path="/login" component={Login} />
-            // <Route path="/jobs/:jobId" component={Login} />
-            // props.location.params.jobId
             <Route path="/" component={withAuth(PhotographerPortal)} />
-            // <Route path="/forgotPassword/:code"/>
           </Switch>
         </BrowserRouter>
       </div>
     );
   }
 }
-
+            // props.location.params.jobId
+            // <Route path="/forgotPassword/:code"/>
 // class ForgotPassword extends Component {
 //
 //   componentDidMount() {
