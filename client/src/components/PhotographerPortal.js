@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { NavLink, Route } from "react-router-dom";
 import Jobs from "./Jobs"
 import JobPosting from "./JobPosting";
+import JobSettings from "./JobSettings";
 import AccountSettings from "./AccountSettings"
 import "../css/styles.css";
 
@@ -64,8 +65,11 @@ export default class PhotographerPortal extends Component {
             <Route exact path="/"
                 render={(props) => <Jobs {...props} uni={this.state.uni} />}
             />
-            <Route path="/jobs/:jobId"
+            <Route exact path="/jobs/:jobId"
                 render={(props) => <JobPosting {...props} uni={this.state.uni}/>}
+            />
+            <Route exact path="/jobs/:jobId/edit"
+                render={(props) => <JobSettings {...props} uni={this.state.uni}/>}
             />
             <Route path="/settings"
                 render={(props) => <AccountSettings {...props} uni={this.state.uni} />}
