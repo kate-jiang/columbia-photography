@@ -186,6 +186,38 @@ app.post("/api/createJob", (req, res) => {
       res.status(500).send("Error creating job.");
     } else {
       res.status(200).send("Successfully created job.");
+      const redirect = encodeURIComponent(`/drafts/${job._id}`);
+      const mailOptions = {
+           from: "columbiauniversityphoto@gmail.com",
+           to: "kyj2108@columbia.edu",
+           subject: "[CPA] New Job Request: " + job.jobName,
+           html: `Hi everyone, here's a new job request:
+                <p>
+                  <strong>Client:</strong> ${job.clientName}<br/>
+                  <strong>Email:</strong> ${job.clientEmail}<br/>
+                  <strong>Phone:</strong> ${job.clientPhone}<br/>
+                </p>
+                <p>
+                  <b>Date:</b> ${job.date}<br/>
+                  <b>Time:</b> ${job.time}<br/>
+                  <b>Location:</b> ${job.location}<br/>
+                  <b>Total Amount:</b> $${job.totalAmount}<br/>
+                  <b>Details:</b> ${job.details}<br/>
+                </p>
+                <p>
+                  Edit and approve this job on the
+                  <a href="http://columbia-photography.herokuapp.com/login?redirect=${redirect}">CPA portal.</a>
+                </p>
+                <p>
+                  Thanks!
+                </p>`
+      };
+
+      const smtpTransport = getTransporter();
+      smtpTransport.sendMail(mailOptions, (error, response) => {
+           error ? console.log(error) : console.log(response);
+           smtpTransport.close();
+      });
     }
   });
 });
@@ -335,7 +367,6 @@ app.post("/api/approveJob", withAdminAuth, (req, res) => {
           };
 
           const smtpTransport = getTransporter();
-
           smtpTransport.sendMail(mailOptions, (error, response) => {
                error ? console.log(error) : console.log(response);
                smtpTransport.close();
