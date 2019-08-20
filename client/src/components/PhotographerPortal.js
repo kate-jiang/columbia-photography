@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { NavLink, Route } from "react-router-dom";
 import Jobs from "./Jobs"
+import Drafts from "./Drafts"
 import JobPosting from "./JobPosting";
 import JobSettings from "./JobSettings";
 import AccountSettings from "./AccountSettings"
@@ -56,7 +57,8 @@ export default class PhotographerPortal extends Component {
             <div className="user">
               <ul>
                 <li className="fullName">{this.state.firstName} {this.state.lastName}</li>
-                <li><NavLink activeClassName="selected" exact to="/">Dashboard</NavLink></li>
+                <li><NavLink activeClassName="selected" exact to="/">Jobs</NavLink></li>
+                <li><NavLink activeClassName="selected" exact to="/drafts">Drafts</NavLink></li>
                 <li><NavLink activeClassName="selected" to="/settings">Account Settings</NavLink></li>
                 <li><NavLink to="/login" onClick={this.logout}>Logout</NavLink></li>
               </ul>
@@ -65,6 +67,9 @@ export default class PhotographerPortal extends Component {
           </div>
             <Route exact path="/"
                 render={(props) => <Jobs {...props} uni={this.state.uni} />}
+            />
+            <Route exact path="/drafts"
+                render={(props) => <Drafts {...props} uni={this.state.uni} />}
             />
             <Route exact path="/jobs/:jobId"
                 render={(props) => <JobPosting {...props} uni={this.state.uni}/>}

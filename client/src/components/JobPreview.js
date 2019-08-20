@@ -84,15 +84,19 @@ export default class JobPreview extends Component {
           <li><strong>Compensation:</strong> ${this.props.job.compensation}</li>
         </ul>
         <div className="jobOptions">
-          {this.state.applied ? (
-            <button onClick={this.withdraw}>Withdraw</button>
-          ) : (
-            <button onClick={this.apply}>Apply</button>
-          )}
+          {this.props.job.approved &&
+            <>
+            {this.state.applied ? (
+              <button onClick={this.withdraw}>Withdraw</button>
+            ) : (
+              <button onClick={this.apply}>Apply</button>
+            )}
+            <Link to={`/jobs/${this.props.job._id}`}><button>More Info</button></Link>
+            </>
+          }
           {this.state.admin &&
             <Link to={`/jobs/${this.props.job._id}/edit`}><button>Edit</button></Link>
           }
-          <Link to={`/jobs/${this.props.job._id}`}><button>More Info</button></Link>
         </div>
       </div>
     )
