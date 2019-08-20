@@ -82,6 +82,8 @@ export default class JobSettings extends Component {
         console.log(err);
         alert(err);
       });
+
+    this.originalValues = this.state;
   }
 
   approve = event => {

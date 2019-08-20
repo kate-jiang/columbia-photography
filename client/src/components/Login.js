@@ -6,8 +6,31 @@ export default class Login extends Component {
     super(props);
     this.state = {
       uni: "",
-      password: ""
+      password: "",
+      redirect: "/"
     };
+  }
+
+  componentDidMount() {
+    const url = new URL(window.location)
+    const redirect = url.searchParams.get("redirect");
+    if (redirect) {
+      this.setState({redirect: decodeURIComponent(redirect)})
+    }
+
+    fetch("/api/checkToken")
+      .then(res => {
+        if (res.status === 200) {
+          this.props.history.push(this.state.redirect);
+        } else {
+          const error = new Error(res.error);
+          throw error;
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        this.setState({ loading: false, redirect: true });
+      });
   }
 
   handleInputChange = event => {
@@ -28,7 +51,7 @@ export default class Login extends Component {
     })
       .then(res => {
         if (res.status === 200) {
-          this.props.history.push("/");
+          this.props.history.push(this.state.redirect);
         } else {
           const error = new Error(res.error);
           throw error;

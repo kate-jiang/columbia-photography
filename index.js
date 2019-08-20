@@ -7,11 +7,42 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const moment = require("moment");
 
+const nodemailer = require("nodemailer");
+const { google } = require("googleapis");
+const OAuth2 = google.auth.OAuth2;
+
 const User = require("./models/User");
 const Job = require("./models/Job");
 const { withAuth, withAdminAuth } = require("./middleware");
 
 const secret = process.env.secret;
+
+const oauth2Client = new OAuth2(
+     process.env.GOOGLE_CLIENT_ID, // ClientID
+     process.env.GOOGLE_CLIENT_SECRET, // Client Secret
+     "https://developers.google.com/oauthplayground" // Redirect URL
+);
+
+oauth2Client.setCredentials({
+  refresh_token: process.env.GOOGLE_REFRESH_TOKEN
+});
+
+const getTransporter = () => {
+  const accessToken = oauth2Client.getAccessToken()
+  const smtpTransport = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        type: "OAuth2",
+        user: "columbiauniversityphoto@gmail.com",
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
+        accessToken: accessToken
+    }
+  });
+
+  return smtpTransport;
+}
 
 const app = express();
 app.use(cors());
@@ -172,6 +203,19 @@ app.get("/api/jobs", withAuth, (req, res) => {
   })
 })
 
+app.get("/api/drafts", withAdminAuth, (req, res) => {
+  Job.find({ approved: false }, (err, jobs) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        error: "Internal error please try again"
+      });
+    } else {
+      res.status(200).send(jobs);
+    }
+  })
+})
+
 app.get("/api/jobs/:jobId", withAuth, (req, res) => {
   Job.findById(req.params.jobId, (err, job) => {
     if (err) {
@@ -267,6 +311,35 @@ app.post("/api/approveJob", withAdminAuth, (req, res) => {
           res.status(500).send("Error approving job.");
         } else {
           res.status(200).send("Successfully approve job.");
+          const redirect = encodeURIComponent(`/jobs/${job._id}`);
+          const mailOptions = {
+               from: "columbiauniversityphoto@gmail.com",
+               to: "kyj2108@columbia.edu",
+               subject: "[CPA] Job Opportunity: " + job.jobName,
+               html: `Hi everyone, here's a new job:
+                    <p>
+                      <b>Name:</b> ${job.jobName}<br/>
+                      <b>Date:</b> ${job.date}<br/>
+                      <b>Time:</b> ${job.time}<br/>
+                      <b>Location:</b> ${job.location}<br/>
+                      <b>Compensation:</b> ${job.compensation}<br/>
+                      <b>Details:</b> ${job.details}<br/>
+                    </p>
+                    <p>
+                      Apply for this job through the
+                      <a href="http://columbia-photography.herokuapp.com/login?redirect=${redirect}">CPA portal.</a>
+                    </p>
+                    <p>
+                      Thanks!
+                    </p>`
+          };
+
+          const smtpTransport = getTransporter();
+
+          smtpTransport.sendMail(mailOptions, (error, response) => {
+               error ? console.log(error) : console.log(response);
+               smtpTransport.close();
+          });
         }
       });
     }
@@ -321,7 +394,7 @@ app.post("/api/updateUser", withAuth, (req, res) => {
 })
 
 app.get("*", (req, res) => {
-    return res.sendFile(path.join(__dirname, 'client/build/index.html')); 
+    return res.sendFile(path.join(__dirname, 'client/build/index.html'));
 });
 
 const PORT = process.env.PORT || 5000;
