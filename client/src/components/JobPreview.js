@@ -25,7 +25,6 @@ export default class JobPreview extends Component {
       })
       .catch(err => {
         console.error(err);
-        this.setState({ loading: false, redirect: true });
       });
   }
 

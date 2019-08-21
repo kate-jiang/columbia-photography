@@ -24,6 +24,10 @@ export default class Drafts extends Component {
           jobs: resJson
         })
       })
+      .catch(err => {
+        console.log(err);
+        alert(err);
+      });
   }
 
   render() {
