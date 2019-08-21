@@ -7,6 +7,9 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const moment = require("moment");
 
+const https = require("https");
+const fs = require("fs");
+
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
@@ -178,7 +181,10 @@ app.post("/api/createJob", (req, res) => {
     approved: false,
     totalAmount,
     compensation: totalAmount * photographerCut,
-    photographers: []
+    photographers: [],
+    invoiceSent: false,
+    portfoliosSent: false,
+    releaseSent: false
   });
 
   job.save(err => {
@@ -422,6 +428,160 @@ app.post("/api/updateUser", withAuth, (req, res) => {
       });
     }
   })
+})
+
+function generateInvoice(invoice, filename, success, error) {
+    const postData = JSON.stringify(invoice);
+    const options = {
+        hostname  : "invoice-generator.com",
+        port      : 443,
+        path      : "/",
+        method    : "POST",
+        headers   : {
+            "Content-Type": "application/json",
+            "Content-Length": Buffer.byteLength(postData)
+        }
+    };
+
+    const file = fs.createWriteStream(filename);
+
+    const req = https.request(options, function(res) {
+        res.on('data', function(chunk) {
+            file.write(chunk);
+        })
+        .on('end', function() {
+            file.end();
+
+            if (typeof success === 'function') {
+                success();
+            }
+        });
+    });
+    req.write(postData);
+    req.end();
+
+    if (typeof error === 'function') {
+        req.on('error', error);
+    }
+}
+
+app.post("/api/invoice", (req, res) => {
+  Job.findById(req.body.jobId, (err, job) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        error: "Internal error please try again"
+      });
+    } else {
+      const invoice = {
+        to: `${job.clientName}\n${job.clientPhone}\n${job.clientEmail}`,
+        currency: "usd",
+        items: [
+          {
+            name: `Photography`,
+            quantity: job.totalAmount / 120,
+            unit_cost: 120
+          },
+        ],
+        number: job.jobName,
+        invoice_number_title: "",
+        notes: "Thank you for your business!"
+      }
+
+      generateInvoice(invoice, 'invoice.pdf', function() {
+        console.log("Saved invoice to invoice.pdf");
+        const mailOptions = {
+             from: "columbiauniversityphoto@gmail.com",
+             to: "kyj2108@columbia.edu",
+             subject: "[CPA] Invoice: " + job.jobName,
+             html: `Hello,
+                  <p>
+                    Please find attached the invoice for ${job.jobName}.
+                  </p>
+                  <p>
+                    Thanks!
+                  </p>`,
+             attachments: [
+               {
+                 filename: `${job.jobName}_invoice.pdf`,
+                          contentType: 'application/pdf',
+                 path: `./invoice.pdf`
+               }
+             ]
+        };
+
+        const smtpTransport = getTransporter();
+        smtpTransport.sendMail(mailOptions, (error, response) => {
+          error ? console.log(error) : console.log(response);
+          smtpTransport.close();
+
+          job.invoiceSent = true;
+          job.save(err => {
+            if (err) {
+              res.status(500).send("Error saving job.");
+            } else {
+              res.status(200).send("Successfully saved job.");
+            }
+          });
+        }, function(error) {
+        console.error(error);
+        });
+      });
+    }
+  })
+});
+
+app.post("/api/sendPortfolios", (req, res) => {
+  Job.findById(req.body.jobId, async (err, job) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        error: "Internal error please try again"
+      });
+    } else {
+      let portfolios = []
+      for (let i = 0; i < job.photographers.length; i++) {
+        await User.findOne({uni: job.photographers[i]})
+          .then(user => {
+            portfolios.push({ name: user.firstName + ' ' + user.lastName, link: user.defaultPortfolio})
+          })
+      }
+      console.log(portfolios);
+
+      const mailOptions = {
+           from: "columbiauniversityphoto@gmail.com",
+           to: "kyj2108@columbia.edu",
+           subject: "[CPA] Available photographers for " + job.jobName,
+           html: `Hello,
+                <p>
+                  Here are the photographers available for your shoot:
+                </p>
+                <ul>
+                  ${portfolios.map(portfolio => `<li><a href="${portfolio.link}">${portfolio.name}</a></li>`).join('')}
+                </ul>
+                <p>
+                  Thanks!
+                </p>`
+      };
+
+      const smtpTransport = getTransporter();
+      smtpTransport.sendMail(mailOptions, (error, response) => {
+        error ? console.log(error) : console.log(response);
+        smtpTransport.close();
+
+        job.portfoliosSent = true;
+        job.save(err => {
+          if (err) {
+            res.status(500).send("Error saving job.");
+          } else {
+            res.status(200).send("Successfully saved job.");
+          }
+        });
+      }, function(error) {
+      console.error(error);
+      });
+     };
+   })
 })
 
 app.get("*", (req, res) => {
