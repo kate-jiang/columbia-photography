@@ -354,7 +354,7 @@ app.post("/api/approveJob", withAdminAuth, (req, res) => {
                       <b>Date:</b> ${job.date}<br/>
                       <b>Time:</b> ${job.time}<br/>
                       <b>Location:</b> ${job.location}<br/>
-                      <b>Compensation:</b> ${job.compensation}<br/>
+                      <b>Compensation:</b> $${job.compensation}<br/>
                       <b>Details:</b> ${job.details}<br/>
                     </p>
                     <p>

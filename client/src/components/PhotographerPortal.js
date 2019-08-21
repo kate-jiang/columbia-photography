@@ -16,6 +16,7 @@ export default class PhotographerPortal extends Component {
       firstName: "",
       lastName: "",
       loading: true,
+      admin: false,
       jobs: []
     };
   }
@@ -40,7 +41,18 @@ export default class PhotographerPortal extends Component {
       })
       .catch(err => {
         console.error(err);
-        this.setState({ loading: false, redirect: true });
+      });
+
+    fetch("/api/checkAdminToken")
+      .then(res => {
+        if (res.status === 200) {
+          this.setState({ admin: true });
+        } else {
+          this.setState({ admin: false });
+        }
+      })
+      .catch(err => {
+        console.error(err);
       });
   }
 
@@ -58,7 +70,7 @@ export default class PhotographerPortal extends Component {
               <ul>
                 <li className="fullName">{this.state.firstName} {this.state.lastName}</li>
                 <li><NavLink activeClassName="selected" exact to="/">Jobs</NavLink></li>
-                <li><NavLink activeClassName="selected" exact to="/drafts">Drafts</NavLink></li>
+                {this.state.admin && <li><NavLink activeClassName="selected" exact to="/drafts">Drafts</NavLink></li>}
                 <li><NavLink activeClassName="selected" to="/settings">Account Settings</NavLink></li>
                 <li><NavLink to="/login" onClick={this.logout}>Logout</NavLink></li>
               </ul>
