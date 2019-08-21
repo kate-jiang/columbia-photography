@@ -60,3 +60,5 @@ env.sh
 
 # next.js build output
 .next
+
+.DS_Store
