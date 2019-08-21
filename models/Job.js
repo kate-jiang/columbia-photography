@@ -60,6 +60,18 @@ const JobSchema = new mongoose.Schema({
   photographers: {
     type: [String],
     required: true
+  },
+  invoiceSent: {
+    type: Boolean,
+    required: true
+  },
+  portfoliosSent: {
+    type: Boolean,
+    required: true
+  },
+  releaseSent: {
+    type: Boolean,
+    required: true
   }
 })
 

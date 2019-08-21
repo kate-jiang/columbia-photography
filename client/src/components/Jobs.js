@@ -24,6 +24,9 @@ export default class Jobs extends Component {
           jobs: resJson
         })
       })
+      .catch(err => {
+        console.error(err);
+      });
   }
 
   render() {
