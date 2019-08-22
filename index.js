@@ -182,6 +182,7 @@ app.post("/api/createJob", (req, res) => {
     totalAmount,
     compensation: totalAmount * photographerCut,
     photographers: [],
+    selectedPhotographer: "",
     invoiceSent: false,
     portfoliosSent: false,
     releaseSent: false
@@ -465,7 +466,27 @@ function generateInvoice(invoice, filename, success, error) {
     }
 }
 
-app.post("/api/invoice", (req, res) => {
+app.get("/api/jobs/:jobId/availablePhotographers", (req, res) => {
+  Job.findById(req.params.jobId, async (err, job) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        error: "Internal error please try again"
+      });
+    } else {
+      let photographers = [];
+      for (let i = 0; i < job.photographers.length; i++) {
+        await User.findOne({uni: job.photographers[i]})
+          .then(user => {
+            photographers.push(user.firstName + ' ' + user.lastName)
+          });
+      }
+      res.status(200).send(photographers);
+    }
+  });
+})
+
+app.post("/api/invoice", withAdminAuth, (req, res) => {
   Job.findById(req.body.jobId, (err, job) => {
     if (err) {
       console.error(err);
@@ -531,27 +552,7 @@ app.post("/api/invoice", (req, res) => {
   })
 });
 
-app.get("/api/jobs/:jobId/availablePhotographers", (req, res) => {
-  Job.findById(req.params.jobId, async (err, job) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({
-        error: "Internal error please try again"
-      });
-    } else {
-      let photographers = [];
-      for (let i = 0; i < job.photographers.length; i++) {
-        await User.findOne({uni: job.photographers[i]})
-          .then(user => {
-            photographers.push(user.firstName + ' ' + user.lastName)
-          });
-      }
-      res.status(200).send(photographers);
-    }
-  });
-})
-
-app.post("/api/sendPortfolios", (req, res) => {
+app.post("/api/sendPortfolios", withAdminAuth, (req, res) => {
   Job.findById(req.body.jobId, async (err, job) => {
     if (err) {
       console.error(err);
@@ -602,6 +603,54 @@ app.post("/api/sendPortfolios", (req, res) => {
       });
      };
    })
+})
+
+app.post("/api/sendRelease", withAdminAuth, (req, res) => {
+  Job.findById(req.body.jobId, (err, job) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        error: "Internal error please try again"
+      });
+    } else {
+      const mailOptions = {
+           from: "columbiauniversityphoto@gmail.com",
+           to: job.selectedPhotographer + "@columbia.edu",
+           subject: "[CPA] Release Form for " + job.jobName,
+           html: `Hello,
+                <p>
+                  Please complete the attached release form for ${job.jobName} to ensure timely payment.
+                </p>
+                <p>
+                  Thanks!
+                </p>`,
+            attachments: [
+              {
+                filename: `${job.jobName}_release.pdf`,
+                         contentType: 'application/pdf',
+                path: `./Release.pdf`
+              }
+            ]
+      };
+
+      const smtpTransport = getTransporter();
+      smtpTransport.sendMail(mailOptions, (error, response) => {
+        error ? console.log(error) : console.log(response);
+        smtpTransport.close();
+
+        job.releaseSent = true;
+        job.save(err => {
+          if (err) {
+            res.status(500).send("Error saving job.");
+          } else {
+            res.status(200).send("Successfully saved job.");
+          }
+        });
+      }, function(error) {
+      console.error(error);
+      });
+    }
+  });
 })
 
 app.get("*", (req, res) => {

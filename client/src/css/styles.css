@@ -65,6 +65,7 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  align-content: flex-start;
   width: 700px;
   background-color: white;
   padding: 30px;
@@ -141,6 +142,7 @@ h1 {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  align-content: flex-start;
   padding: 30px;
 }
 
@@ -282,6 +284,7 @@ a:hover {
 .manage {
   display: flex;
   width: 100%;
+  margin-bottom: 20px;
 }
 
 .workflowContainer {
