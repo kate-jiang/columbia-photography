@@ -94,9 +94,6 @@ export default class JobPreview extends Component {
             </>
           }
           {this.state.admin &&
-            <Link to={`/jobs/${this.props.job._id}/edit`}><button>Edit</button></Link>
-          }
-          {this.state.admin &&
             <Link to={`/jobs/${this.props.job._id}/manage`}><button>Manage</button></Link>
           }
         </div>
