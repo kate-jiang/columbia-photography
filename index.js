@@ -16,6 +16,8 @@ const OAuth2 = google.auth.OAuth2;
 
 const User = require("./models/User");
 const Job = require("./models/Job");
+const ClientSession = require("./models/ClientSession");
+
 const { withAuth, withAdminAuth } = require("./middleware");
 
 const secret = process.env.secret;
@@ -569,6 +571,12 @@ app.post("/api/sendPortfolios", withAdminAuth, (req, res) => {
       }
       console.log(portfolios);
 
+      const clientSession = new ClientSession({
+        email: job.clientEmail
+      });
+
+      const client = await clientSession.save()
+
       const mailOptions = {
            from: "columbiauniversityphoto@gmail.com",
            to: "kyj2108@columbia.edu",
@@ -580,6 +588,9 @@ app.post("/api/sendPortfolios", withAdminAuth, (req, res) => {
                 <ul>
                   ${portfolios.map(portfolio => `<li><a href="${portfolio.link}">${portfolio.name}</a></li>`).join('')}
                 </ul>
+                <p>
+                  Please select who you would like to work with <a href="http://columbia-photography.herokuapp.com/${job._id}/${client._id}">here</a>.
+                </p>
                 <p>
                   Thanks!
                 </p>`
@@ -603,6 +614,23 @@ app.post("/api/sendPortfolios", withAdminAuth, (req, res) => {
       });
      };
    })
+})
+
+app.get("/api/checkClient/:clientId", (req, res) => {
+  Client.findById(req.params.clientId, (err, client) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        error: "Internal error please try again"
+      });
+    } else if (!client) {
+      res.status(401).json({
+        error: "Unauthorized"
+      });
+    } else {
+      res.sendStatus(200);
+    }
+  })
 })
 
 app.post("/api/sendRelease", withAdminAuth, (req, res) => {
