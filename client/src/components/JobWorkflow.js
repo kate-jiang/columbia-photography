@@ -158,7 +158,8 @@ export default class JobWorkflow extends Component {
         <div className="manage">
           <div className="clientInfo">
           <ul className="jobDetails">
-            <strong>Available Photographers:</strong> {this.state.photographers.join(', ')}
+            <strong>Available Photographers: </strong>
+            {this.state.photographers.map(photographer => photographer.firstName + " " + photographer.lastName).join(", ")}
           </ul>
           </div>
         </div>

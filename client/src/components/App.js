@@ -14,7 +14,7 @@ class App extends Component {
         <BrowserRouter>
           <Switch>
             <Route path="/hire" component={HireForm} />
-            <Route exact path="/:jobId/:clientId" component={PhotographerSelect} /> 
+            <Route exact path="/:jobId/:clientId" component={PhotographerSelect} />
             <Route path="/login" component={Login} />
             <Route path="/" component={withAuth(PhotographerPortal)} />
           </Switch>
@@ -23,20 +23,5 @@ class App extends Component {
     );
   }
 }
-            // props.location.params.jobId
-            // <Route path="/forgotPassword/:code"/>
-// class ForgotPassword extends Component {
-//
-//   componentDidMount() {
-//     // '/forgotPassword?code=123'
-//     const url = new URL(window.location)
-//     const code = url.searchParams.get('code')
-//     // make ajax request to server validating code
-//     // if not valid, show message + redirect
-//   }
-//
-//   submitNewPassword() {
-//     // submit code + newPass
-//   }
-// }
+
 export default App;
