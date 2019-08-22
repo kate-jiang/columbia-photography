@@ -14,7 +14,22 @@ export default class HireForm extends Component {
     fetch("/api/checkClient")
       .then(res => {
         if (res.status === 200) {
-          res.redirect("/api/jobs/" + this.props.match.params.jobId + "/availablePhotographers");
+          fetch("/api/jobs/" + this.props.match.params.jobId + "/availablePhotographers")
+            .then(res => {
+              if (res.status === 200) {
+                return res.json();
+              } else {
+                const error = new Error(res.error);
+                throw error;
+              }
+            })
+            .then(resJson => {
+              this.setState({photographers: resJson})
+            })
+            .catch(err => {
+              console.log(err);
+              alert(err);
+            });
         } else {
           this.props.history.push("/");
         }
@@ -45,18 +60,27 @@ export default class HireForm extends Component {
   }
 
   handleInputChange = event => {
-    const { value, name } = event.target;
     this.setState({
-      [name]: value
+      selectedPhotographer: event.target.value
     });
-    console.log(value);
   };
 
   render() {
     return (
       <div className="container">
         <div className="hire">
-          <div className="hireTitle">Select Photographer</div>
+          <div className="hireTitle">SELECT PHOTOGRAPHER</div>
+          <ul>
+            {this.state.photographers.map(photographer => {
+              return (
+                <li><input type="radio"
+                           value={photographer.uni}
+                           checked={this.state.selectedPhotographer === photographer.uni}
+                           onChange={this.handleInputChange} />{photographer.firstName} {photographer.lastName}
+                </li>
+              )
+            })}
+          </ul>
         </div>
       </div>
     )

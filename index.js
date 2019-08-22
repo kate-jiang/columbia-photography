@@ -479,9 +479,7 @@ app.get("/api/jobs/:jobId/availablePhotographers", (req, res) => {
       let photographers = [];
       for (let i = 0; i < job.photographers.length; i++) {
         await User.findOne({uni: job.photographers[i]})
-          .then(user => {
-            photographers.push(user.firstName + ' ' + user.lastName)
-          });
+          .then(user => { photographers.push(user) });
       }
       res.status(200).send(photographers);
     }
