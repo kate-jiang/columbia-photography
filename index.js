@@ -531,6 +531,26 @@ app.post("/api/invoice", (req, res) => {
   })
 });
 
+app.get("/api/jobs/:jobId/availablePhotographers", (req, res) => {
+  Job.findById(req.params.jobId, async (err, job) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        error: "Internal error please try again"
+      });
+    } else {
+      let photographers = [];
+      for (let i = 0; i < job.photographers.length; i++) {
+        await User.findOne({uni: job.photographers[i]})
+          .then(user => {
+            photographers.push(user.firstName + ' ' + user.lastName)
+          });
+      }
+      res.status(200).send(photographers);
+    }
+  });
+})
+
 app.post("/api/sendPortfolios", (req, res) => {
   Job.findById(req.body.jobId, async (err, job) => {
     if (err) {
