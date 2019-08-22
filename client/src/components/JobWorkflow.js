@@ -109,6 +109,29 @@ export default class JobWorkflow extends Component {
     });
   }
 
+  sendRelease = () => {
+    fetch("/api/sendRelease", {
+      method: "POST",
+      body: JSON.stringify({ jobId: this.props.match.params.jobId }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then(res => {
+      if (res.status === 200) {
+        this.setState({ releaseSent: true });
+        console.log("success")
+      } else {
+        const error = new Error(res.error);
+        throw error;
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      alert(err);
+    });
+  }
+
   render() {
     return (
       <div className="hire">
@@ -150,7 +173,7 @@ export default class JobWorkflow extends Component {
           </div>
           <div className="column">
             <div className="status">Release { this.state.releaseSent ? '✅' : '❌'}</div>
-            <button onClick={this.sendPortfolios}>Send Release</button>
+            <button onClick={this.sendRelease}>Send Release</button>
           </div>
         </div>
       </div>

@@ -61,6 +61,10 @@ const JobSchema = new mongoose.Schema({
     type: [String],
     required: true
   },
+  selectedPhotographer: {
+    type: String,
+    required: false
+  },
   invoiceSent: {
     type: Boolean,
     required: true

@@ -90,8 +90,11 @@ export default class JobPreview extends Component {
             ) : (
               <button onClick={this.apply}>Apply</button>
             )}
-            <Link to={`/jobs/${this.props.job._id}`}><button>More Info</button></Link>
+            {/* <Link to={`/jobs/${this.props.job._id}`}><button>More Info</button></Link> */}
             </>
+          }
+          {this.state.admin &&
+            <Link to={`/jobs/${this.props.job._id}/edit`}><button>Edit</button></Link>
           }
           {this.state.admin &&
             <Link to={`/jobs/${this.props.job._id}/manage`}><button>Manage</button></Link>
