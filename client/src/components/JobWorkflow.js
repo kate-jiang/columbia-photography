@@ -42,7 +42,8 @@ export default class JobWorkflow extends Component {
           time: resJson.time,
           totalAmount: resJson.totalAmount,
           photographers: resJson.photographers,
-          selectedPhotographer: resJson.selectedPhotographer,
+          selectedPhotographer: resJson.selectedPhotographer
+            ? resJson.selectedPhotographer : {},
           approved: resJson.approved,
           invoiceSent: resJson.invoiceSent,
           portfoliosSent: resJson.portfoliosSent,
@@ -169,12 +170,16 @@ export default class JobWorkflow extends Component {
           <ul className="jobDetails">
             <li>
               <strong>Available Photographers: </strong>
-              {this.state.photographers.map(photographer => photographer.firstName + " " + photographer.lastName).join(", ")}
+              { this.state.photographers.length !== 0 ? (
+                this.state.photographers.map(photographer => photographer.firstName + " " + photographer.lastName).join(", ")
+              ) : (
+                "No responses."
+              )}
             </li>
             <li>
               <strong>Selected Photographer: </strong>
-              { Object.entries(this.state.selectedPhotographer).length !== 0 ? (
-                  this.state.selectedPhotographer.firstName + " " + this.state.selectedPhotographer.lastName 
+              { this.state.selectedPhotographer.uni !== "" ? (
+                  this.state.selectedPhotographer.firstName + " " + this.state.selectedPhotographer.lastName
                  ) : (
                   "Pending client confirmation."
                 )

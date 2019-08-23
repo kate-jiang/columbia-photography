@@ -184,7 +184,7 @@ app.post("/api/createJob", (req, res) => {
     totalAmount,
     compensation: totalAmount * photographerCut,
     photographers: [],
-    selectedPhotographer: {},
+    selectedPhotographer: { uni: "", firstName: "", lastName: "" },
     invoiceSent: false,
     portfoliosSent: false,
     releaseSent: false
