@@ -178,7 +178,7 @@ a:hover {
 .portal {
   display: flex;
   width: 900px;
-  min-height: 75vh;
+  height: 75vh;
   background-color: white;
 }
 
