@@ -343,3 +343,14 @@ a:hover {
 	margin-inline-end: 0;
 	padding-inline-start: 0px;
 }
+
+.confirmation {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+  width: 350px;
+  background-color: white;
+  padding: 30px;
+  text-align: center;
+}

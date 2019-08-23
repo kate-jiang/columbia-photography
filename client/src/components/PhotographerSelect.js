@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 
-export default class HireForm extends Component {
+export default class PhotographerSelect extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -57,7 +57,10 @@ export default class HireForm extends Component {
     })
     .then(res => {
       if (res.status === 200) {
-        this.props.history.push("/confirm");
+        this.props.history.push({
+          pathname: "/confirm",
+          state: { type: "selectPhotographer" }
+        });
       } else {
         const error = new Error(res.error);
         throw error;
