@@ -201,7 +201,7 @@ app.post("/api/createJob", (req, res) => {
       const redirect = encodeURIComponent(`/drafts/${job._id}`);
       const mailOptions = {
            from: "columbiauniversityphoto@gmail.com",
-           to: "kyj2108@columbia.edu",
+           to: "columbiauniversityphoto@gmail.com",
            subject: "[CPA] New Job Request: " + job.jobName,
            html: `Hi everyone, here's a new job request:
                 <p>
@@ -516,7 +516,7 @@ app.post("/api/invoice", withAdminAuth, (req, res) => {
         console.log("Saved invoice to invoice.pdf");
         const mailOptions = {
              from: "columbiauniversityphoto@gmail.com",
-             to: "kyj2108@columbia.edu",
+             to: job.clientEmail,
              subject: "[CPA] Invoice: " + job.jobName,
              html: `Hello,
                   <p>
@@ -580,7 +580,7 @@ app.post("/api/sendPortfolios", withAdminAuth, (req, res) => {
 
       const mailOptions = {
            from: "columbiauniversityphoto@gmail.com",
-           to: "kyj2108@columbia.edu",
+           to: job.clientEmail,
            subject: "[CPA] Available photographers for " + job.jobName,
            html: `Hello,
                 <p>
