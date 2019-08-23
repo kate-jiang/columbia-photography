@@ -9,6 +9,7 @@ const moment = require("moment");
 
 const https = require("https");
 const fs = require("fs");
+const async = require("async");
 
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
@@ -341,7 +342,7 @@ app.post("/api/updateJob", withAdminAuth, (req, res) => {
 })
 
 app.post("/api/approveJob", withAdminAuth, (req, res) => {
-  Job.findById(req.body.jobId, (err, job) => {
+  Job.findById(req.body.jobId, async (err, job) => {
     if (err) {
       console.log(err);
       res.status(500).json({
@@ -643,33 +644,86 @@ app.post("/api/selectPhotographer", (req, res) => {
     } else {
       job.selectedPhotographer = req.body.selectedPhotographer;
 
-      job.save(err => {
+      job.save(async err => {
         if (err) {
           res.status(500).send("Error saving job.");
         } else {
-          res.status(200).send("Successfully saved job.");
-          const mailOptions = {
-               from: "columbiauniversityphoto@gmail.com",
-               to: job.clientEmail,
-               cc:  job.selectedPhotographer.uni + "@columbia.edu",
-               subject: "[CPA] " + job.jobName,
-               html: `Hi ${job.clientFirstName},
-                    <p>
-                      ${job.selectedPhotographer.firstName}, copied here, will be your photographer for this job.
-                      Please discuess logistics such as meeting time and location on this thread.
-                    </p>
-                    <p>
-                    Feel free to reach out regarding any further concerns.
-                    </p>
-                    <p>
-                      Thanks!
-                    </p>`
-          };
+          oauth2Client.setCredentials({
+            refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
+            access_token: (await oauth2Client.getAccessToken()).token
+          });
+          const drive = google.drive({version: 'v3', auth: oauth2Client});
 
-          const smtpTransport = getTransporter();
-          smtpTransport.sendMail(mailOptions, (error, response) => {
-               error ? console.log(error) : console.log(response);
-               smtpTransport.close();
+          const fileMetadata = {
+            'name': 'Invoices',
+            'mimeType': 'application/vnd.google-apps.folder',
+            parents: ['1PuoA6yHo5xAB8VgfrQ_4VARTOfbj0mpy']
+          };
+          drive.files.create({
+            resource: fileMetadata,
+            fields: 'id'
+          }, function (err, file) {
+            if (err) {
+              // Handle error
+              console.error(err);
+            } else {
+              const permissions = [
+                { type: 'user', role: 'writer', emailAddress: job.clientEmail },
+                { type: 'user', role: 'writer', emailAddress: job.selectedPhotographer.uni + "@columbia.edu" }
+              ]
+
+              async.eachSeries(permissions, function (permission, permissionCallback) {
+                drive.permissions.create({
+                  resource: permission,
+                  fileId: file.data.id,
+                  fields: 'id',
+                }, function (err, res) {
+                  if (err) {
+                    // Handle error...
+                    console.error(err);
+                    permissionCallback(err);
+                  } else {
+                    console.log('Permission ID: ', res.data.id)
+                    permissionCallback();
+                  }
+                });
+              }, function (err) {
+                if (err) {
+                  // Handle error
+                  console.error(err);
+                } else {
+                  // All permissions inserted
+                }
+              });
+
+              const mailOptions = {
+                   from: "columbiauniversityphoto@gmail.com",
+                   to: job.clientEmail,
+                   cc:  job.selectedPhotographer.uni + "@columbia.edu",
+                   subject: "[CPA] " + job.jobName,
+                   html: `Hi ${job.clientFirstName},
+                        <p>
+                          ${job.selectedPhotographer.firstName}, copied here, will be your photographer for this job.
+                          Please discuess logistics such as meeting time and location on this thread.
+                        </p>
+                        <p>
+                          <a href="https://drive.google.com/drive/u/0/folders/${file.data.id}">Here</a> is the Google Drive folder where the photos will be uploaded within one week of the shoot.
+                        </p>
+                        <p>
+                        Feel free to reach out regarding any further concerns.
+                        </p>
+                        <p>
+                          Thanks!
+                        </p>`
+              };
+
+              const smtpTransport = getTransporter();
+              smtpTransport.sendMail(mailOptions, (error, response) => {
+                   error ? console.log(error) : console.log(response);
+                   smtpTransport.close();
+              });
+              res.status(200).send("Successfully saved job.");
+            }
           });
         }
       });
