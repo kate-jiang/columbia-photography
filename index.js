@@ -655,7 +655,7 @@ app.post("/api/selectPhotographer", (req, res) => {
           const drive = google.drive({version: 'v3', auth: oauth2Client});
 
           const fileMetadata = {
-            'name': 'Invoices',
+            'name': job.jobName,
             'mimeType': 'application/vnd.google-apps.folder',
             parents: ['1PuoA6yHo5xAB8VgfrQ_4VARTOfbj0mpy']
           };
