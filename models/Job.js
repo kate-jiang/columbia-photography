@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-mongoose.Schema.Types.String.checkRequired(v => v != null);
+
 const JobSchema = new mongoose.Schema({
   jobName: {
     type: String,
@@ -61,10 +61,7 @@ const JobSchema = new mongoose.Schema({
     type: [String],
     required: true
   },
-  selectedPhotographer: {
-    type: String,
-    required: true
-  },
+  selectedPhotographer: mongoose.Mixed,
   invoiceSent: {
     type: Boolean,
     required: true
