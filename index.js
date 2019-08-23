@@ -355,7 +355,7 @@ app.post("/api/approveJob", withAdminAuth, (req, res) => {
           res.status(500).send("Error approving job.");
         } else {
           res.status(200).send("Successfully approved job.");
-          const redirect = encodeURIComponent(`/jobs`);
+          const redirect = encodeURIComponent(`/`);
           const mailOptions = {
                from: "columbiauniversityphoto@gmail.com",
                to: "kyj2108@columbia.edu",
