@@ -7,7 +7,7 @@ export default class HireForm extends Component {
     this.state = {
       photographers: [],
       redirect: false,
-      selectedPhotographer: ""
+      selectedPhotographerUni: ""
     }
   }
 
@@ -37,33 +37,11 @@ export default class HireForm extends Component {
       })
   }
 
-  handleSubmit = event => {
-    event.preventDefault();
-    fetch("/api/createJob",  {
-      method: "POST",
-      body: JSON.stringify(this.state),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-    .then(res => {
-      if (res.status === 200) {
-        this.props.history.push("/");
-      } else {
-        const error = new Error(res.error);
-        throw error;
-      }
-    })
-    .catch(err => {
-      console.error(err);
-      alert("Error creating job request. Please email columbia-photography@columbia.edu for assistance.");
-    });
-  }
-
   handleInputChange = event => {
     this.setState({
-      selectedPhotographer: event.target.value
+      selectedPhotographerUni: event.target.value
     });
+    console.log(event.target.value)
   };
 
   submit = () => {
@@ -71,7 +49,7 @@ export default class HireForm extends Component {
       method: "POST",
       body: JSON.stringify({
         jobId: this.props.match.params.jobId,
-        selectedPhotographer: this.state.selectedPhotographer
+        selectedPhotographer: this.state.photographers.find(p => p.uni === this.state.selectedPhotographerUni)
       }),
       headers: {
         "Content-Type": "application/json"
@@ -101,7 +79,7 @@ export default class HireForm extends Component {
               return (
                 <li><input type="radio"
                            value={photographer.uni}
-                           checked={this.state.selectedPhotographer === photographer.uni}
+                           checked={this.state.selectedPhotographerUni === photographer.uni}
                            onChange={this.handleInputChange} /> {photographer.firstName} {photographer.lastName}
                 </li>
               )

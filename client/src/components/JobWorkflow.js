@@ -9,7 +9,15 @@ export default class JobWorkflow extends Component {
       portfoliosSent: false,
       releaseSent: false,
       jobName: "",
-      photographers: []
+      photographers: [],
+      clientName: "",
+      clientEmail: "",
+      clientPhone: "",
+      date: "",
+      location: "",
+      time: "",
+      totalAmount: "",
+      selectedPhotographer: {}
     }
   }
 
@@ -34,6 +42,7 @@ export default class JobWorkflow extends Component {
           time: resJson.time,
           totalAmount: resJson.totalAmount,
           photographers: resJson.photographers,
+          selectedPhotographer: resJson.selectedPhotographer,
           approved: resJson.approved,
           invoiceSent: resJson.invoiceSent,
           portfoliosSent: resJson.portfoliosSent,
@@ -158,8 +167,19 @@ export default class JobWorkflow extends Component {
         <div className="manage">
           <div className="clientInfo">
           <ul className="jobDetails">
-            <strong>Available Photographers: </strong>
-            {this.state.photographers.map(photographer => photographer.firstName + " " + photographer.lastName).join(", ")}
+            <li>
+              <strong>Available Photographers: </strong>
+              {this.state.photographers.map(photographer => photographer.firstName + " " + photographer.lastName).join(", ")}
+            </li>
+            <li>
+              <strong>Selected Photographer: </strong>
+              { Object.entries(this.state.selectedPhotographer).length !== 0 ? (
+                  this.state.selectedPhotographer.firstName + " " + this.state.selectedPhotographer.lastName 
+                 ) : (
+                  "Pending client confirmation."
+                )
+              }
+            </li>
           </ul>
           </div>
         </div>

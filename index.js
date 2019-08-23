@@ -184,7 +184,7 @@ app.post("/api/createJob", (req, res) => {
     totalAmount,
     compensation: totalAmount * photographerCut,
     photographers: [],
-    selectedPhotographer: "",
+    selectedPhotographer: {},
     invoiceSent: false,
     portfoliosSent: false,
     releaseSent: false
@@ -663,7 +663,7 @@ app.post("/api/sendRelease", withAdminAuth, (req, res) => {
     } else {
       const mailOptions = {
            from: "columbiauniversityphoto@gmail.com",
-           to: job.selectedPhotographer + "@columbia.edu",
+           to: job.selectedPhotographer.uni + "@columbia.edu",
            subject: "[CPA] Release Form for " + job.jobName,
            html: `Hello,
                 <p>
