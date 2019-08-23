@@ -5,6 +5,10 @@ const JobSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  submissionDate: {
+    type: Date,
+    required: true
+  },
   jobType: {
     type: String,
     required: true
