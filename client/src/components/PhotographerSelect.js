@@ -83,7 +83,8 @@ export default class PhotographerSelect extends Component {
                 <li><input type="radio"
                            value={photographer.uni}
                            checked={this.state.selectedPhotographerUni === photographer.uni}
-                           onChange={this.handleInputChange} /> {photographer.firstName} {photographer.lastName}
+                           onChange={this.handleInputChange} />
+                            {` ${photographer.firstName} ${photographer.lastName}`} (<a href={photographer.defaultPortfolio}>view portfolio</a>)
                 </li>
               )
             })}
