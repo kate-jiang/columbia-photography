@@ -6,7 +6,8 @@ export default class HireForm extends Component {
     super(props);
     this.state = {
       photographers: [],
-      redirect: false
+      redirect: false,
+      selectedPhotographer: ""
     }
   }
 
@@ -65,10 +66,35 @@ export default class HireForm extends Component {
     });
   };
 
+  submit = () => {
+    fetch("/api/selectPhotographer", {
+      method: "POST",
+      body: JSON.stringify({
+        jobId: this.props.match.params.jobId,
+        selectedPhotographer: this.state.selectedPhotographer
+      }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then(res => {
+      if (res.status === 200) {
+        this.props.history.push("/confirm");
+      } else {
+        const error = new Error(res.error);
+        throw error;
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Error selecting photographer. Please email columbia-photography@columbia.edu for assistance.");
+    });
+  }
+
   render() {
     return (
       <div className="container">
-        <div className="hire">
+        <div className="selectPhotographer">
           <div className="hireTitle">SELECT PHOTOGRAPHER</div>
           <ul>
             {this.state.photographers.map(photographer => {
@@ -76,11 +102,13 @@ export default class HireForm extends Component {
                 <li><input type="radio"
                            value={photographer.uni}
                            checked={this.state.selectedPhotographer === photographer.uni}
-                           onChange={this.handleInputChange} />{photographer.firstName} {photographer.lastName}
+                           onChange={this.handleInputChange} /> {photographer.firstName} {photographer.lastName}
                 </li>
               )
             })}
           </ul>
+          <div className="break"></div>
+          <button onClick={this.submit}>Submit</button>
         </div>
       </div>
     )

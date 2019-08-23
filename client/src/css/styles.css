@@ -227,7 +227,7 @@ a:hover {
   line-height: 20px;
 }
 
-.jobPreview ul, .jobPosting ul, .clientInfo ul {
+.jobPreview ul, .jobPosting ul, .clientInfo ul{
   list-style-type: none;
   margin-block-start: 0px;
 	margin-block-end: 0px;
@@ -296,7 +296,7 @@ a:hover {
   background-color: white;
 }
 
-.workflowContainer button {
+.workflowContainer button, .selectPhotographer button {
   margin: 10px;
   flex: 1;
   border: none;
@@ -323,4 +323,23 @@ a:hover {
   text-align: center;
   padding: 15px;
   border: 1px solid #dadce0;
+}
+
+.selectPhotographer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+  width: 350px;
+  background-color: white;
+  padding: 30px;
+}
+
+.selectPhotographer ul {
+  list-style-type: none;
+  margin-block-start: 0px;
+	margin-block-end: 0px;
+	margin-inline-start: 0;
+	margin-inline-end: 0;
+	padding-inline-start: 0px;
 }

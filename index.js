@@ -631,6 +631,28 @@ app.get("/api/checkClient/:clientId", (req, res) => {
   })
 })
 
+app.post("/api/selectPhotographer", (req, res) => {
+  Job.findById(req.body.jobId, (err, job) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({
+        error: "Internal error please try again"
+      });
+    } else {
+      console.log(req.body.selectedPhotographer)
+      job.selectedPhotographer = req.body.selectedPhotographer;
+
+      job.save(err => {
+        if (err) {
+          res.status(500).send("Error saving job.");
+        } else {
+          res.status(200).send("Successfully saved job.");
+        }
+      });
+    }
+  })
+})
+
 app.post("/api/sendRelease", withAdminAuth, (req, res) => {
   Job.findById(req.body.jobId, (err, job) => {
     if (err) {
