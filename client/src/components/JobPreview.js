@@ -85,7 +85,7 @@ export default class JobPreview extends Component {
         <div className="jobOptions">
           {this.props.job.approved &&
             <>
-            {this.state.applied ? (
+            {this.props.job.photographers.indexOf(this.props.uni) > -1 ? (
               <button onClick={this.withdraw}>Withdraw</button>
             ) : (
               <button onClick={this.apply}>Apply</button>
