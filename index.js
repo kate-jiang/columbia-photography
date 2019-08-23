@@ -198,7 +198,7 @@ app.post("/api/createJob", (req, res) => {
       res.status(500).send("Error creating job.");
     } else {
       res.status(200).send("Successfully created job.");
-      const redirect = encodeURIComponent(`/drafts/${job._id}`);
+      const redirect = encodeURIComponent(`/jobs/${job._id}/manage`);
       const mailOptions = {
            from: "columbiauniversityphoto@gmail.com",
            to: "columbiauniversityphoto@gmail.com",
