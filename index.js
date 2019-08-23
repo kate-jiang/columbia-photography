@@ -169,6 +169,7 @@ app.post("/api/createJob", (req, res) => {
 
   const job = new Job({
     jobName,
+    submissionDate: new Date(),
     jobType: "event",
     clientName: `${firstName} ${lastName}`,
     clientEmail,
@@ -232,7 +233,7 @@ app.post("/api/createJob", (req, res) => {
 });
 
 app.get("/api/jobs", withAuth, (req, res) => {
-  Job.find({ approved: true }, (err, jobs) => {
+  Job.find({ approved: true }).sort({ submissionDate: -1 }).exec((err, jobs) => {
     if (err) {
       console.error(err);
       res.status(500).json({
