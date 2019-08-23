@@ -172,6 +172,7 @@ app.post("/api/createJob", (req, res) => {
     submissionDate: new Date(),
     jobType: "event",
     clientName: `${firstName} ${lastName}`,
+    clientFirstName: firstName,
     clientEmail,
     clientPhone,
     date,
@@ -352,7 +353,7 @@ app.post("/api/approveJob", withAdminAuth, (req, res) => {
         if (err) {
           res.status(500).send("Error approving job.");
         } else {
-          res.status(200).send("Successfully approve job.");
+          res.status(200).send("Successfully approved job.");
           const redirect = encodeURIComponent(`/jobs/${job._id}`);
           const mailOptions = {
                from: "columbiauniversityphoto@gmail.com",
@@ -640,7 +641,6 @@ app.post("/api/selectPhotographer", (req, res) => {
         error: "Internal error please try again"
       });
     } else {
-      console.log(req.body.selectedPhotographer)
       job.selectedPhotographer = req.body.selectedPhotographer;
 
       job.save(err => {
@@ -648,6 +648,29 @@ app.post("/api/selectPhotographer", (req, res) => {
           res.status(500).send("Error saving job.");
         } else {
           res.status(200).send("Successfully saved job.");
+          const mailOptions = {
+               from: "columbiauniversityphoto@gmail.com",
+               to: job.clientEmail,
+               cc:  job.selectedPhotographer.uni + "@columbia.edu",
+               subject: "[CPA] " + job.jobName,
+               html: `Hi ${job.clientFirstName},
+                    <p>
+                      ${job.selectedPhotographer.firstName}, copied here, will be your photographer for this job.
+                      Please discuess logistics such as meeting time and location on this thread.
+                    </p>
+                    <p>
+                    Feel free to reach out regarding any further concerns.
+                    </p>
+                    <p>
+                      Thanks!
+                    </p>`
+          };
+
+          const smtpTransport = getTransporter();
+          smtpTransport.sendMail(mailOptions, (error, response) => {
+               error ? console.log(error) : console.log(response);
+               smtpTransport.close();
+          });
         }
       });
     }
