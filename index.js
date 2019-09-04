@@ -248,7 +248,7 @@ app.get("/api/jobs", withAuth, (req, res) => {
 })
 
 app.get("/api/drafts", withAdminAuth, (req, res) => {
-  Job.find({ approved: false }, (err, jobs) => {
+  Job.find({ approved: false }).sort({ submissionDate: -1 }).exec((err, jobs) => {
     if (err) {
       console.error(err);
       res.status(500).json({
